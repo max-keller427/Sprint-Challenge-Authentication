@@ -13,10 +13,10 @@ module.exports = server => {
 };
 
 function generateToken(user) {
-  jwt.sign(
+  return jwt.sign(
     {
       userId: user.id,
-      userPass: user.pass
+      userName: user.username
     },
     secrets.jwt,
     { expiresIn: "1h" }
@@ -31,10 +31,9 @@ function register(req, res) {
   db.add(user)
     .then(newUser => {
       const token = generateToken(newUser);
+      console.log(token);
 
-      res
-        .status(201)
-        .json({ message: `Welcome ${newUser.username}`, authToken: token });
+      res.status(201).json({ authToken: token });
     })
     .catch(err => {
       res.status(500).json({ message: "Please try again" });
